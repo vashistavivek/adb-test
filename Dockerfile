@@ -24,9 +24,9 @@ RUN apt-get install -y yarn
 # RUN easy_install pip
 
 
-ENV ENV_TYPE staging
-ENV MONGO_HOST mongo
-ENV MONGO_PORT 27017
+# ENV ENV_TYPE staging
+# ENV MONGO_HOST mongo
+# ENV MONGO_PORT 27017
 ##########
 
 ENV PYTHONPATH=$PYTHONPATH:/src/

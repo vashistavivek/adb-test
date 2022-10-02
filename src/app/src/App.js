@@ -29,8 +29,10 @@ export function App() {
         })
         .then(res => res.json())
         .then(res => {
-            getTodos();
-            e.target.reset();
+            if(res.success){
+                getTodos();
+                e.target.reset();
+            }
         })
         .catch(err => console.error(err));
     }

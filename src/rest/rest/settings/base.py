@@ -10,23 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
-import sys, os
+import os
 from corsheaders.defaults import default_headers
+from rest.settings.get_env import get_environment_variables
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-print( "base dir path", BASE_DIR)
-sys.path.append(os.path.join(BASE_DIR, ".."))
+BASE_DIR = os.path.abspath(os.path.dirname(__name__))
+PROJECT_DIR = os.path.abspath(os.path.dirname(__name__))
+
+CURRENT_ENV = os.environ.get('CURRENT_ENV', 'LOCAL')
+
+env = get_environment_variables(environment=CURRENT_ENV)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-SECRET_KEY = '00000000000000000000000000000000000000000000000000'
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ['localhost']
+DEBUG = True if env.get("DEBUG", 'False').strip().lower() == 'true' else False
+
+ALLOWED_HOSTS = [host.strip() for host in env.get("ALLOWED_HOSTS", "localhost").split(",")]
 
 
 # Application definition
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [

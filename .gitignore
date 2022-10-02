@@ -1,3 +1,5 @@
 /src/db
 /src/rest/rest/__pycache__
 src/rest/mydatabase
+
+/src/rest/rest/settings/__pycache__
