@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,10 +12,17 @@ db = MongoClient(mongo_uri)['test_db']
 class TodoListView(APIView):
 
     def get(self, request):
-        # Implement this method - return all todo items from db instance above.
-        return Response({}, status=status.HTTP_200_OK)
+        # db['todos'].delete_many({})
+        todos = db['todos'].find()
+        todos_list = [todo['todo'] for todo in todos]
+        return Response({'data': todos_list, 'msg': 'OK'}, status=status.HTTP_200_OK)
         
     def post(self, request):
-        # Implement this method - accept a todo item in a mongo collection, persist it using db instance above.
-        return Response({}, status=status.HTTP_200_OK)
+        todo = request.POST.get('todo')
+        if not todo:
+            return Response({'msg': 'Todo must not be empty.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        todo_dict = {"todo": todo, 'created_at': datetime.now()}
+        db['todos'].insert_one(todo_dict)
+        return Response({'msg': 'TODO created successfully.'}, status=status.HTTP_200_OK)
 
